@@ -1,0 +1,14 @@
+server:
+  port: 8007
+
+# mybatis 配置
+mybatis:
+  type-aliases-package: com.cmic.hbservice.domain
+
+
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/hb?serverTimezone=UTC
+    username: root
+    password: password
