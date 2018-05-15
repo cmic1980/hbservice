@@ -13,6 +13,6 @@ public interface AnalysisResultMapper {
             "analysis_time as analysisTime, symbol, s_hour as shour, " +
             "t,income,scale,current " +
             "from analysis_result " +
-            "where current = 1")
+            "where current = 1 order by s_hour")
     List<AnalysisResult> selectAnalysisResult();
 }

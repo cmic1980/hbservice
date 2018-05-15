@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/hbservice.iml" filepath="$PROJECT_DIR$/.idea/hbservice.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hbservice-core.iml" filepath="$PROJECT_DIR$/.idea/modules/hbservice-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hbservice-core.iml" filepath="$PROJECT_DIR$/.idea/modules/hbservice-core.iml" group="hbservice-core" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/hbservice-core_main.iml" filepath="$PROJECT_DIR$/.idea/modules/hbservice-core_main.iml" group="hbservice-core" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/hbservice-core_test.iml" filepath="$PROJECT_DIR$/.idea/modules/hbservice-core_test.iml" group="hbservice-core" />
     </modules>
