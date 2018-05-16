@@ -2,6 +2,7 @@ package com.cmic.hbservice.mapper;
 
 import com.cmic.hbservice.domain.AnalysisResult;
 import com.cmic.hbservice.domain.Order;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -16,6 +17,11 @@ public interface OrderMapper {
 
     @Select("select * " +
             "from order_item " +
-            "where status = 1")
+            "where status = #{status}")
     List<Order> selectListByStatus(int status);
+
+
+    @Delete("delete from order_item " +
+            "where order_item_id = #{orderId}")
+    List<Order> delete(int orderId);
 }

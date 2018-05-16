@@ -29,4 +29,9 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orderList = this.orderMapper.selectListByStatus(OrderStatus.Pending);
         return orderList;
     }
+
+    @Override
+    public void cancelOrder(int orderId) {
+        this.orderMapper.delete(orderId);
+    }
 }

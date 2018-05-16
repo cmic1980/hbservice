@@ -30,4 +30,15 @@ public class OrderController {
         List<Order> orderList = this.orderService.getPendingList();
         return orderList;
     }
+
+
+    @RequestMapping("/order/delete")
+    @ResponseBody
+    public HashMap delete(@RequestBody Order order) {
+        int orderId = order.getOrderItemId();
+        this.orderService.cancelOrder(orderId);
+        HashMap<String,Object> result = new HashMap<>();
+        result.put("result",true);
+        return result;
+    }
 }
