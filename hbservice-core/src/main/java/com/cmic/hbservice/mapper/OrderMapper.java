@@ -15,7 +15,7 @@ public interface OrderMapper {
             "VALUES(#{amount},#{symbol},#{orderType},#{status},#{buyPrice},#{sellPrice},#{buyTime},#{t})")
     void insert(Order order);
 
-    @Select("select * " +
+    @Select("select *,order_item_id as orderItemId " +
             "from order_item " +
             "where status = #{status}")
     List<Order> selectListByStatus(int status);
@@ -23,5 +23,5 @@ public interface OrderMapper {
 
     @Delete("delete from order_item " +
             "where order_item_id = #{orderId}")
-    List<Order> delete(int orderId);
+    void delete(int orderId);
 }
