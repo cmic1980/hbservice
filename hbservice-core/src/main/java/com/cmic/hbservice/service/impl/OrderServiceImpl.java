@@ -8,10 +8,12 @@ import com.cmic.hbservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderServiceImpl implements OrderService {
     @Autowired
-    private OrderMapper orderItemMapper;
+    private OrderMapper orderMapper;
 
     @Override
     public void addOrder(Order order) {
@@ -19,6 +21,12 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.Pending);
         order.setSellPrice(0F);
         order.setBuyPrice(0F);
-        this.orderItemMapper.insert(order);
+        this.orderMapper.insert(order);
+    }
+
+    @Override
+    public List<Order> getPendingList() {
+        List<Order> orderList = this.orderMapper.selectListByStatus(OrderStatus.Pending);
+        return orderList;
     }
 }

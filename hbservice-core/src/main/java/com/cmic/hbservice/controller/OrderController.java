@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController("")
 public class OrderController {
@@ -21,5 +22,12 @@ public class OrderController {
         HashMap<String,Object> result = new HashMap<>();
         result.put("result",true);
         return result;
+    }
+
+    @RequestMapping("/order/pending/list")
+    @ResponseBody
+    public List<Order> getPendingOrderList() {
+        List<Order> orderList = this.orderService.getPendingList();
+        return orderList;
     }
 }

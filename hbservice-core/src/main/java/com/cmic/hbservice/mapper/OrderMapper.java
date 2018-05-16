@@ -13,4 +13,9 @@ public interface OrderMapper {
     @Insert("INSERT INTO order_item(amount,symbol,order_type,status,buy_price,sell_price,buy_time,t) " +
             "VALUES(#{amount},#{symbol},#{orderType},#{status},#{buyPrice},#{sellPrice},#{buyTime},#{t})")
     void insert(Order order);
+
+    @Select("select * " +
+            "from order_item " +
+            "where status = 1")
+    List<Order> selectListByStatus(int status);
 }
