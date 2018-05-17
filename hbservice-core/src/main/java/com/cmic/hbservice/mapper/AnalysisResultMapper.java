@@ -11,7 +11,7 @@ import java.util.List;
 public interface AnalysisResultMapper {
     @Select("select analysis_result_id as analysisResultId, " +
             "analysis_time as analysisTime, symbol, s_hour as shour, " +
-            "t,income,scale,current " +
+            "t,income,scale,current,price " +
             "from analysis_result " +
             "where current = 1 order by s_hour")
     List<AnalysisResult> selectAnalysisResult();

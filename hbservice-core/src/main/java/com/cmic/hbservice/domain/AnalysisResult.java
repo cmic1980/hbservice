@@ -19,6 +19,8 @@ public class AnalysisResult {
 
     private Boolean current;
 
+    private Float price;
+    
     public Integer getAnalysisResultId() {
         return analysisResultId;
     }
@@ -81,5 +83,13 @@ public class AnalysisResult {
 
     public void setCurrent(Boolean current) {
         this.current = current;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 }
