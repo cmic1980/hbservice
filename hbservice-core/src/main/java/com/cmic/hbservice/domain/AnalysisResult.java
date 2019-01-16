@@ -1,5 +1,7 @@
 package com.cmic.hbservice.domain;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.Date;
 
 public class AnalysisResult {
@@ -20,7 +22,15 @@ public class AnalysisResult {
     private Boolean current;
 
     private Float price;
-    
+
+    private Float vol;
+
+    private Float amount;
+
+    private int days;
+
+    private String exchangeUrl;
+
     public Integer getAnalysisResultId() {
         return analysisResultId;
     }
@@ -91,5 +101,38 @@ public class AnalysisResult {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public Float getVol() {
+        return vol;
+    }
+
+    public void setVol(Float vol) {
+        this.vol = vol;
+    }
+
+    public Float getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Float amount) {
+        this.amount = amount;
+    }
+
+    public int getDays() {
+        return days;
+    }
+
+    public void setDays(int days) {
+        this.days = days;
+    }
+
+
+    public String getExchangeUrl() {
+        return exchangeUrl;
+    }
+
+    public void setExchangeUrl(String exchangeUrl) {
+        this.exchangeUrl = exchangeUrl;
     }
 }

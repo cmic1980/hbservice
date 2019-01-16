@@ -24,4 +24,7 @@ public class AnalysisResultController {
         var analysisResultList =  analysisResultService.getCurrentList();
         return analysisResultList;
     }
+
+
+
 }
