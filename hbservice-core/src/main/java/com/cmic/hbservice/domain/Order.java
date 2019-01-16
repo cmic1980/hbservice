@@ -3,7 +3,7 @@ package com.cmic.hbservice.domain;
 import java.util.Date;
 
 public class Order {
-    private Integer orderItemId;
+    private Long orderItemId;
 
     private Float amount;
 
@@ -13,19 +13,19 @@ public class Order {
 
     private Integer status;
 
-    private Float buyPrice;
+    private Double buyPrice;
 
-    private Float sellPrice;
+    private Double sellPrice;
 
     private Date buyTime;
 
     private Float t;
 
-    public Integer getOrderItemId() {
+    public Long getOrderItemId() {
         return orderItemId;
     }
 
-    public void setOrderItemId(Integer orderItemId) {
+    public void setOrderItemId(Long orderItemId) {
         this.orderItemId = orderItemId;
     }
 
@@ -61,19 +61,19 @@ public class Order {
         this.status = status;
     }
 
-    public Float getBuyPrice() {
+    public Double getBuyPrice() {
         return buyPrice;
     }
 
-    public void setBuyPrice(Float buyPrice) {
+    public void setBuyPrice(Double buyPrice) {
         this.buyPrice = buyPrice;
     }
 
-    public Float getSellPrice() {
+    public Double getSellPrice() {
         return sellPrice;
     }
 
-    public void setSellPrice(Float sellPrice) {
+    public void setSellPrice(Double sellPrice) {
         this.sellPrice = sellPrice;
     }
 

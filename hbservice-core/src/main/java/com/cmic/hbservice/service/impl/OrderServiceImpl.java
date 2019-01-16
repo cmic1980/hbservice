@@ -22,8 +22,8 @@ public class OrderServiceImpl implements OrderService {
         this.orderList = null;
         order.setOrderType("sell-limit");
         order.setStatus(OrderStatus.Pending);
-        order.setSellPrice(0F);
-        order.setBuyPrice(0F);
+        order.setSellPrice(0D);
+        order.setBuyPrice(0D);
         this.orderMapper.insert(order);
     }
 
@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancelOrder(int orderId) {
+    public void cancelOrder(long orderId) {
         this.orderList = null;
         this.orderMapper.delete(orderId);
     }

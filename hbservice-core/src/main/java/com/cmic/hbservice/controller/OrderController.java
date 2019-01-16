@@ -35,7 +35,7 @@ public class OrderController {
     @RequestMapping("/order/delete")
     @ResponseBody
     public HashMap delete(@RequestBody Order order) {
-        int orderId = order.getOrderItemId();
+        long orderId = order.getOrderItemId();
         this.orderService.cancelOrder(orderId);
         HashMap<String,Object> result = new HashMap<>();
         result.put("result",true);

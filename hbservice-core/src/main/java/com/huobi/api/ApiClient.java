@@ -82,7 +82,7 @@ public class ApiClient {
     static final int WRITE_TIMEOUT = 5;
 
 
-    static final String API_URL = "https://api.huobi.pro";
+    static final String API_URL = "https://api.huobi.br.com";
     static final String API_HOST = getHost();
 
     static final MediaType JSON = MediaType.parse("application/json");
