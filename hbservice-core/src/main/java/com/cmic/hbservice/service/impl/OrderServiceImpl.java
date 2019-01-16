@@ -15,8 +15,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
+    private List<Order> orderList;
+
     @Override
     public void addOrder(Order order) {
+        this.orderList = null;
         order.setOrderType("sell-limit");
         order.setStatus(OrderStatus.Pending);
         order.setSellPrice(0F);
@@ -26,12 +29,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getPendingList() {
-        List<Order> orderList = this.orderMapper.selectListByStatus(OrderStatus.Pending);
+        if (this.orderList == null) {
+            orderList = this.orderMapper.selectListByStatus(OrderStatus.Pending);
+        }
         return orderList;
     }
 
     @Override
     public void cancelOrder(int orderId) {
+        this.orderList = null;
         this.orderMapper.delete(orderId);
     }
 }

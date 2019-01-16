@@ -16,3 +16,7 @@ spring:
 huobi:
   exchange:
     url: https://www.huobi.co/zh-cn/exchange/?s=
+  api:
+    url: https://api.huobi.br.com
+  key:
+    path: c:/src/keys/hb.json
