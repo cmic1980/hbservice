@@ -3,7 +3,7 @@ package com.cmic.hbservice.domain;
 import java.util.Date;
 
 public class Order {
-    private Long orderItemId;
+    private Integer orderItemId;
 
     private Float amount;
 
@@ -21,11 +21,13 @@ public class Order {
 
     private Float t;
 
-    public Long getOrderItemId() {
+    private Long orderId;
+
+    public Integer getOrderItemId() {
         return orderItemId;
     }
 
-    public void setOrderItemId(Long orderItemId) {
+    public void setOrderItemId(Integer orderItemId) {
         this.orderItemId = orderItemId;
     }
 
@@ -91,5 +93,13 @@ public class Order {
 
     public void setT(Float t) {
         this.t = t;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 }

@@ -8,4 +8,5 @@ public interface OrderService {
     void addOrder(Order order);
     List<Order> getPendingList();
     void cancelOrder(long orderId);
+    void updateOrder(Order order);
 }

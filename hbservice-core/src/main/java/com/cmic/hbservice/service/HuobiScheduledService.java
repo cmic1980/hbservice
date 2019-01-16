@@ -3,6 +3,7 @@ package com.cmic.hbservice.service;
 import com.alibaba.fastjson.JSONObject;
 import com.cmic.hbservice.domain.Order;
 
+import com.cmic.hbservice.domain.OrderStatus;
 import com.huobi.api.ApiClient;
 import com.huobi.request.CreateOrderRequest;
 import com.huobi.response.Accounts;
@@ -25,7 +26,6 @@ import java.util.Scanner;
 
 @Component
 public class HuobiScheduledService {
-
     @Autowired
     private OrderService orderService;
 
@@ -44,8 +44,9 @@ public class HuobiScheduledService {
             Date date = new Date();
             if (date.getTime() - o.getBuyTime().getTime() > 0) {
                 var buyPrice = this.getBuyPrice(o.getSymbol());
+                buyPrice = buyPrice / 2;
                 o.setBuyPrice(buyPrice);
-                o = null;
+                this.createBuyOrder(o);
             }
 
             /*
@@ -78,17 +79,36 @@ public class HuobiScheduledService {
     }
 
     /**
-     *  获取最后 小时k 线最后一根的开盘价作为买入价格
+     * 获取最后 小时k 线最后一根的开盘价作为买入价格
      */
     private Double getBuyPrice(String symbol) {
         var client = this.apiService.getApiClient();
         KlineResponse response = client.kline(symbol, "60min", "1");
 
-        var klineList = (ArrayList<Kline>)response.data;
+        var klineList = (ArrayList<Kline>) response.data;
         var kline = klineList.get(0);
         var buyPrice = kline.getOpen();
         return buyPrice;
     }
 
+    private long createBuyOrder(Order order) {
+        var client = this.apiService.getApiClient();
 
+        // create order:
+        CreateOrderRequest request = new CreateOrderRequest();
+        request.accountId = String.valueOf(this.getAccountId());
+        request.amount = order.getAmount().toString();
+        request.price = order.getBuyPrice().toString();
+        request.symbol = order.getSymbol();
+        request.type = CreateOrderRequest.OrderType.BUY_LIMIT;
+        request.source = "api";
+
+        //------------------------------------------------------ 创建订单  -------------------------------------------------------
+        long orderId = client.createOrder(request);
+        order.setOrderId(orderId);
+        order.setStatus(OrderStatus.Buy);
+
+        this.orderService.updateOrder(order);
+        return orderId;
+    }
 }

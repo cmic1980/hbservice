@@ -40,4 +40,9 @@ public class OrderServiceImpl implements OrderService {
         this.orderList = null;
         this.orderMapper.delete(orderId);
     }
+
+    @Override
+    public void updateOrder(Order order) {
+        this.orderMapper.update(order);
+    }
 }

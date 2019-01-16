@@ -2,10 +2,7 @@ package com.cmic.hbservice.mapper;
 
 import com.cmic.hbservice.domain.AnalysisResult;
 import com.cmic.hbservice.domain.Order;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +23,10 @@ public interface OrderMapper {
     @Delete("delete from order_item " +
             "where order_item_id = #{orderId}")
     void delete(long orderId);
+
+    @Update("update order_item " +
+            "set order_id= #{orderId}, buy_price= #{buyPrice}, status= #{status} " +
+            "where order_item_id = #{orderItemId}")
+    void update(Order order);
+
 }
