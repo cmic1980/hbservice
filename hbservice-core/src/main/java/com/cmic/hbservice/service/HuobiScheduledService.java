@@ -36,7 +36,6 @@ public class HuobiScheduledService {
 
     @Scheduled(cron = "*/10 * * * * ?")
     public void createOrder() {
-
         var client = this.apiService.getApiClient();
         List<Order> orderList = this.orderService.getPendingList();
         orderList.forEach(o -> {
@@ -44,26 +43,10 @@ public class HuobiScheduledService {
             Date date = new Date();
             if (date.getTime() - o.getBuyTime().getTime() > 0) {
                 var buyPrice = this.getBuyPrice(o.getSymbol());
-                buyPrice = buyPrice / 2;
+                buyPrice = buyPrice / 1.5;
                 o.setBuyPrice(buyPrice);
                 this.createBuyOrder(o);
             }
-
-            /*
-            CreateOrderRequest createOrderRequest = new CreateOrderRequest();
-            // create order:
-            CreateOrderRequest createOrderReq = new CreateOrderRequest();
-            createOrderReq.accountId = String.valueOf(this.getAccountId());
-            createOrderReq.amount = o.getAmount().toString();
-            createOrderReq.price = o.getBuyPrice().toString();
-            createOrderReq.symbol = o.getSymbol();
-            createOrderReq.type = CreateOrderRequest.OrderType.BUY_LIMIT;
-            createOrderReq.source = "api";
-            */
-
-            //------------------------------------------------------ 创建订单  -------------------------------------------------------
-            // long orderId = client.createOrder(createOrderReq);
-
         });
     }
 
@@ -99,9 +82,14 @@ public class HuobiScheduledService {
         request.accountId = String.valueOf(this.getAccountId());
         request.amount = order.getAmount().toString();
         request.price = order.getBuyPrice().toString();
+        if(request.price.length()>8)
+        {
+            request.price = request.price.substring(0,8);
+        }
         request.symbol = order.getSymbol();
         request.type = CreateOrderRequest.OrderType.BUY_LIMIT;
         request.source = "api";
+
 
         //------------------------------------------------------ 创建订单  -------------------------------------------------------
         long orderId = client.createOrder(request);
@@ -110,5 +98,39 @@ public class HuobiScheduledService {
 
         this.orderService.updateOrder(order);
         return orderId;
+    }
+
+    /**
+     *  1. 检查挂单成交状态
+     */
+    // @Scheduled(cron = "*/5 * * * * ?")
+    public void sellOrder(){
+        var client = this.apiService.getApiClient();
+
+        var response = client.balance(this.getAccountId().toString());
+
+
+        /*
+        var buyingList = this.orderService.getBuyingList();
+        buyingList.stream().forEach(o->{
+            var orderId = o.getOrderId();
+            var response = client.ordersDetail(orderId.toString());
+            response = null;
+        });*/
+
+        // client.ordersDetail()
+    }
+
+    @Scheduled(cron = "*/10 * * * * ?")
+    public void cancelOrder(){
+        var client = this.apiService.getApiClient();
+        var buyingList = this.orderService.getBuyingList();
+        buyingList.stream().forEach(o->{
+            var orderId = o.getOrderId();
+            var response = client.submitcancel(orderId.toString());
+            o.setStatus(OrderStatus.Done);
+            this.orderService.updateOrder(o);
+        });
+
     }
 }

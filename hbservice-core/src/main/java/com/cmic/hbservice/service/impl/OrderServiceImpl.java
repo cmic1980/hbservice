@@ -17,14 +17,18 @@ public class OrderServiceImpl implements OrderService {
 
     private List<Order> orderList;
 
+    private List<Order> buyingList;
+
     @Override
     public void addOrder(Order order) {
         this.orderList = null;
-        order.setOrderType("sell-limit");
+        order.setOrderType("buy-limit");
         order.setStatus(OrderStatus.Pending);
         order.setSellPrice(0D);
         order.setBuyPrice(0D);
         this.orderMapper.insert(order);
+
+        this.clearOrderListCache();
     }
 
     @Override
@@ -36,13 +40,29 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancelOrder(long orderId) {
-        this.orderList = null;
-        this.orderMapper.delete(orderId);
+    public void cancelOrder(long orderItemId) {
+        this.orderMapper.delete(orderItemId);
+
+        this.clearOrderListCache();
     }
 
     @Override
     public void updateOrder(Order order) {
         this.orderMapper.update(order);
+
+        this.clearOrderListCache();
+    }
+
+    @Override
+    public List<Order> getBuyingList() {
+        if (this.buyingList == null) {
+            buyingList = this.orderMapper.selectListByStatus(OrderStatus.Buy);
+        }
+        return buyingList;
+    }
+
+    private void clearOrderListCache() {
+        this.orderList = null;
+        this.buyingList = null;
     }
 }

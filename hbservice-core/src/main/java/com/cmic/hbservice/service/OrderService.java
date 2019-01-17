@@ -9,4 +9,6 @@ public interface OrderService {
     List<Order> getPendingList();
     void cancelOrder(long orderId);
     void updateOrder(Order order);
+    List<Order> getBuyingList();
+
 }
