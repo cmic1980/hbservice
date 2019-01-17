@@ -13,6 +13,7 @@ import com.huobi.response.KlineResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,10 +54,13 @@ public class HuobiServiceImpl implements HuobiService {
         CreateOrderRequest request = new CreateOrderRequest();
         request.accountId = String.valueOf(this.getAccountId());
         request.amount = order.getAmount().toString();
-        request.price = order.getBuyPrice().toString();
+
+        BigDecimal price = new BigDecimal(order.getBuyPrice());
+        request.price = price.toString();
         if (request.price.length() > 8) {
             request.price = request.price.substring(0, 8);
         }
+
         request.symbol = order.getSymbol();
         request.type = CreateOrderRequest.OrderType.BUY_LIMIT;
         request.source = "api";
@@ -76,14 +80,16 @@ public class HuobiServiceImpl implements HuobiService {
         CreateOrderRequest request = new CreateOrderRequest();
         request.accountId = String.valueOf(this.getAccountId());
         request.amount = order.getAmount().toString();
-        request.price = order.getSellPrice().toString();
+
+        BigDecimal price = new BigDecimal(order.getSellPrice());
+        request.price = price.toString();
         if (request.price.length() > 8) {
             request.price = request.price.substring(0, 8);
         }
+
         request.symbol = order.getSymbol();
         request.type = CreateOrderRequest.OrderType.SELL_LIMIT;
         request.source = "api";
-
 
         //------------------------------------------------------ 创建订单  -------------------------------------------------------
         long orderId = client.createOrder(request);

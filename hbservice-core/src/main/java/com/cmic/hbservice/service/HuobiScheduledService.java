@@ -96,11 +96,11 @@ public class HuobiScheduledService {
             // 撤销一小时后的未成交订单 （如果部分成交或全部成交调用撤销函数不会有错误，所以没判断是否成交，就是直接撤销所以买单）
             Date date = new Date();
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
+            calendar.setTime(o.getBuyTime());
             calendar.add(Calendar.HOUR, 1);
-            date = calendar.getTime();
+            Date sellDate = calendar.getTime();
 
-            if (date.getTime() - o.getBuyTime().getTime() > 0) {
+            if (date.getTime() - sellDate.getTime() > 0) {
                 this.huobiService.cancelOrder(orderId);
                 o.setStatus(OrderStatus.Done);
                 this.orderService.updateOrder(o);
