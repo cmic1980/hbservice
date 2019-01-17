@@ -18,7 +18,8 @@ public class HuobiScheduledService {
     @Autowired
     private ApiService apiService;
 
-    private Integer accountId;
+    @Autowired
+    private HuobiService huobiService;
 
     @Scheduled(cron = "*/10 * * * * ?")
     public void createOrder() {
@@ -28,92 +29,18 @@ public class HuobiScheduledService {
 
             Date date = new Date();
             if (date.getTime() - o.getBuyTime().getTime() > 0) {
-                var buyPrice = this.getBuyPrice(o.getSymbol());
-                buyPrice = buyPrice / 1.5;
-
+                var buyPrice = this.huobiService.getBuyPrice(o.getSymbol());
                 o.setBuyPrice(buyPrice);
                 float t = ((100 + o.getT()) / 100);
                 Double sellPrice = buyPrice * t;
                 o.setSellPrice(sellPrice);
 
-                this.createBuyOrder(o);
+                this.huobiService.createBuyOrder(o);
+                this.orderService.updateOrder(o);
             }
         });
     }
 
-    private Integer getAccountId() {
-        if (this.accountId == null) {
-            var client = this.apiService.getApiClient();
-            AccountsResponse accounts = client.accounts();
-            List<Accounts> list = (List<Accounts>) accounts.getData();
-            Accounts account = list.get(0);
-            this.accountId = account.getId();
-        }
-        return this.accountId;
-    }
-
-    /**
-     * 获取最后 小时k 线最后一根的开盘价作为买入价格
-     */
-    private Double getBuyPrice(String symbol) {
-        var client = this.apiService.getApiClient();
-        KlineResponse response = client.kline(symbol, "60min", "1");
-
-        var klineList = (ArrayList<Kline>) response.data;
-        var kline = klineList.get(0);
-        var buyPrice = kline.getOpen();
-        return buyPrice;
-    }
-
-    private long createBuyOrder(Order order) {
-        var client = this.apiService.getApiClient();
-
-        // create order:
-        CreateOrderRequest request = new CreateOrderRequest();
-        request.accountId = String.valueOf(this.getAccountId());
-        request.amount = order.getAmount().toString();
-        request.price = order.getBuyPrice().toString();
-        if (request.price.length() > 8) {
-            request.price = request.price.substring(0, 8);
-        }
-        request.symbol = order.getSymbol();
-        request.type = CreateOrderRequest.OrderType.BUY_LIMIT;
-        request.source = "api";
-
-
-        //------------------------------------------------------ 创建订单  -------------------------------------------------------
-        long orderId = client.createOrder(request);
-        order.setOrderId(orderId);
-        order.setStatus(OrderStatus.Buy);
-
-        this.orderService.updateOrder(order);
-        return orderId;
-    }
-
-    private long createSellOrder(Order order) {
-        var client = this.apiService.getApiClient();
-
-        // create order:
-        CreateOrderRequest request = new CreateOrderRequest();
-        request.accountId = String.valueOf(this.getAccountId());
-        request.amount = order.getAmount().toString();
-        request.price = order.getSellPrice().toString();
-        if (request.price.length() > 8) {
-            request.price = request.price.substring(0, 8);
-        }
-        request.symbol = order.getSymbol();
-        request.type = CreateOrderRequest.OrderType.SELL_LIMIT;
-        request.source = "api";
-
-
-        //------------------------------------------------------ 创建订单  -------------------------------------------------------
-        long orderId = client.createOrder(request);
-        order.setOrderId(orderId);
-        order.setStatus(OrderStatus.Buy);
-
-        this.orderService.updateOrder(order);
-        return orderId;
-    }
 
     /**
      * 1. 检查挂单成交状态
@@ -121,7 +48,7 @@ public class HuobiScheduledService {
     @Scheduled(cron = "*/30 * * * * ?")
     public void sellOrder() {
         var client = this.apiService.getApiClient();
-        var response = client.balance(this.getAccountId().toString());
+        var response = client.balance(this.huobiService.getAccountId().toString());
         var balance = (Balance) response.getData();
 
         var buyingList = this.orderService.getBuyingList();
@@ -147,7 +74,7 @@ public class HuobiScheduledService {
 
                     var ethCount = order.getAmount() * order.getSellPrice();
                     if (ethCount > 0.0001) {
-                        this.createSellOrder(order);
+                        this.huobiService.createSellOrder(order);
                     }
                 }
             }
@@ -174,7 +101,7 @@ public class HuobiScheduledService {
             date = calendar.getTime();
 
             if (date.getTime() - o.getBuyTime().getTime() > 0) {
-                var response = client.submitcancel(orderId.toString());
+                this.huobiService.cancelOrder(orderId);
                 o.setStatus(OrderStatus.Done);
                 this.orderService.updateOrder(o);
             }

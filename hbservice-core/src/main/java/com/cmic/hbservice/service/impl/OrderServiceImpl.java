@@ -42,7 +42,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void cancelOrder(long orderItemId) {
         this.orderMapper.delete(orderItemId);
-
         this.clearOrderListCache();
     }
 
