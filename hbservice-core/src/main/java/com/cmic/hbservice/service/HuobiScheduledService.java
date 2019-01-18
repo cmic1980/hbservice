@@ -27,7 +27,6 @@ public class HuobiScheduledService {
             if (date.getTime() - o.getBuyTime().getTime() > 0) {
 
                 var buyPrice = this.huobiService.getBuyPrice(o.getSymbol());
-                buyPrice = buyPrice.divide(new BigDecimal(2));
                 o.setBuyPrice(buyPrice);
 
                 float t = ((100 + o.getT()) / 100);
