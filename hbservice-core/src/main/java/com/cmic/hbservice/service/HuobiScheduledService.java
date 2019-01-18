@@ -64,10 +64,10 @@ public class HuobiScheduledService {
 
                 if (buyingOrder.isPresent()) {
                     Order order = buyingOrder.get();
-                    order.setAmount(Float.valueOf(count));
+                    order.setAmount(new BigDecimal(count));
 
-                    var ethCount = order.getAmount() * order.getSellPrice().floatValue();
-                    if (ethCount > 0.0001) {
+                    var ethCount = order.getAmount().multiply(order.getSellPrice()) ;
+                    if (ethCount.doubleValue() > 0.0001) {
                         this.huobiService.createSellOrder(order);
                     }
                 }

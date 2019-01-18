@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
 -- 主机:                           127.0.0.1
--- 服务器版本:                        10.2.14-MariaDB - mariadb.org binary distribution
--- 服务器操作系统:                      Win64
+-- 服务器版本:                        10.3.12-MariaDB-1:10.3.12+maria~bionic - mariadb.org binary distribution
+-- 服务器操作系统:                      debian-linux-gnu
 -- HeidiSQL 版本:                  9.4.0.5125
 -- --------------------------------------------------------
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `analysis_result` (
   `vol` float NOT NULL DEFAULT 0,
   `days` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`analysis_result_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
 
 -- 数据导出被取消选择。
 -- 导出  表 hb.daily_trade 结构
@@ -52,24 +52,19 @@ CREATE TABLE IF NOT EXISTS `daily_trade` (
 
 -- 数据导出被取消选择。
 -- 导出  表 hb.order_item 结构
-CREATE TABLE `order_item` (
-	`order_item_id` INT(11) NOT NULL AUTO_INCREMENT,
-	`amount` FLOAT NOT NULL DEFAULT '0',
-	`symbol` VARCHAR(20) NOT NULL DEFAULT '0',
-	`order_type` VARCHAR(20) NOT NULL DEFAULT '0',
-	`status` INT(11) NOT NULL DEFAULT '0',
-	`buy_price` DECIMAL(16,8) NOT NULL DEFAULT '0',
-	`sell_price` DECIMAL(16,8) NOT NULL DEFAULT '0',
-	`buy_time` DATETIME NOT NULL,
-	`t` FLOAT NOT NULL DEFAULT '0',
-	`order_id` BIGINT(20) NOT NULL DEFAULT '0',
-	PRIMARY KEY (`order_item_id`)
-)
-COLLATE='utf8_general_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=5
-;
-
+CREATE TABLE IF NOT EXISTS `order_item` (
+  `order_item_id` int(11) NOT NULL AUTO_INCREMENT,
+  `amount` decimal(10,0) NOT NULL DEFAULT 0,
+  `symbol` varchar(20) NOT NULL DEFAULT '0',
+  `order_type` varchar(20) NOT NULL DEFAULT '0',
+  `status` int(11) NOT NULL DEFAULT 0,
+  `buy_price` decimal(16,8) NOT NULL DEFAULT 0.00000000,
+  `sell_price` decimal(16,8) NOT NULL DEFAULT 0.00000000,
+  `buy_time` datetime NOT NULL,
+  `t` float NOT NULL DEFAULT 0,
+  `order_id` bigint(20) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`order_item_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- 数据导出被取消选择。
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

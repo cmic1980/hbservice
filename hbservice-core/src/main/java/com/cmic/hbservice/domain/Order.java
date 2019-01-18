@@ -6,7 +6,7 @@ import java.util.Date;
 public class Order {
     private Integer orderItemId;
 
-    private Float amount;
+    private BigDecimal amount;
 
     private String symbol;
 
@@ -32,11 +32,11 @@ public class Order {
         this.orderItemId = orderItemId;
     }
 
-    public Float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
