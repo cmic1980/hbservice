@@ -8,6 +8,7 @@ import com.cmic.hbservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -24,8 +25,8 @@ public class OrderServiceImpl implements OrderService {
         this.orderList = null;
         order.setOrderType("buy-limit");
         order.setStatus(OrderStatus.Pending);
-        order.setSellPrice(0D);
-        order.setBuyPrice(0D);
+        order.setSellPrice(BigDecimal.ZERO);
+        order.setBuyPrice(BigDecimal.ZERO);
         this.orderMapper.insert(order);
 
         this.clearOrderListCache();

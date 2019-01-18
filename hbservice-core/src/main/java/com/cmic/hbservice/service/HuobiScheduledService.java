@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Component
@@ -16,23 +17,21 @@ public class HuobiScheduledService {
     private OrderService orderService;
 
     @Autowired
-    private ApiService apiService;
-
-    @Autowired
     private HuobiService huobiService;
 
     @Scheduled(cron = "*/10 * * * * ?")
     public void createOrder() {
-        var client = this.apiService.getApiClient();
         List<Order> orderList = this.orderService.getPendingList();
         orderList.forEach(o -> {
-
             Date date = new Date();
             if (date.getTime() - o.getBuyTime().getTime() > 0) {
+
                 var buyPrice = this.huobiService.getBuyPrice(o.getSymbol());
+                buyPrice = buyPrice.divide(new BigDecimal(2));
                 o.setBuyPrice(buyPrice);
+
                 float t = ((100 + o.getT()) / 100);
-                Double sellPrice = buyPrice * t;
+                BigDecimal sellPrice = buyPrice.multiply(new BigDecimal(t));
                 o.setSellPrice(sellPrice);
 
                 this.huobiService.createBuyOrder(o);
@@ -47,13 +46,9 @@ public class HuobiScheduledService {
      */
     @Scheduled(cron = "*/30 * * * * ?")
     public void sellOrder() {
-        var client = this.apiService.getApiClient();
-        var response = client.balance(this.huobiService.getAccountId().toString());
-        var balance = (Balance) response.getData();
-
+        var itemList = this.huobiService.getBalanceItemList();
         var buyingList = this.orderService.getBuyingList();
 
-        var itemList = (List<HashMap>) balance.getList();
         // itemList = itemList.stream().filter(s -> s.get("balance").equals("0") == false).collect(Collectors.toList());
         itemList.forEach(o -> {
             String count = o.get("balance").toString();
@@ -72,15 +67,13 @@ public class HuobiScheduledService {
                     Order order = buyingOrder.get();
                     order.setAmount(Float.valueOf(count));
 
-                    var ethCount = order.getAmount() * order.getSellPrice();
+                    var ethCount = order.getAmount() * order.getSellPrice().floatValue();
                     if (ethCount > 0.0001) {
                         this.huobiService.createSellOrder(order);
                     }
                 }
             }
         });
-
-        response = null;
     }
 
     /**
@@ -88,7 +81,6 @@ public class HuobiScheduledService {
      */
     @Scheduled(cron = "*/30 * * * * ?")
     public void cancelOrder() {
-        var client = this.apiService.getApiClient();
         var buyingList = this.orderService.getBuyingList();
 
         buyingList.stream().forEach(o -> {

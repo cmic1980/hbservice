@@ -1,5 +1,6 @@
 package com.cmic.hbservice.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Order {
@@ -13,9 +14,9 @@ public class Order {
 
     private Integer status;
 
-    private Double buyPrice;
+    private BigDecimal buyPrice;
 
-    private Double sellPrice;
+    private BigDecimal sellPrice;
 
     private Date buyTime;
 
@@ -63,19 +64,19 @@ public class Order {
         this.status = status;
     }
 
-    public Double getBuyPrice() {
+    public BigDecimal getBuyPrice() {
         return buyPrice;
     }
 
-    public void setBuyPrice(Double buyPrice) {
+    public void setBuyPrice(BigDecimal buyPrice) {
         this.buyPrice = buyPrice;
     }
 
-    public Double getSellPrice() {
+    public BigDecimal getSellPrice() {
         return sellPrice;
     }
 
-    public void setSellPrice(Double sellPrice) {
+    public void setSellPrice(BigDecimal sellPrice) {
         this.sellPrice = sellPrice;
     }
 

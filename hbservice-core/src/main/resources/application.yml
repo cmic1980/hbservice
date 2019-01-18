@@ -9,7 +9,7 @@ mybatis:
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/hb?serverTimezone=UTC
+    url: jdbc:mysql://localhost:13306/hb?serverTimezone=UTC
     username: root
     password: password
 
