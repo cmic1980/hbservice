@@ -52,19 +52,24 @@ CREATE TABLE IF NOT EXISTS `daily_trade` (
 
 -- 数据导出被取消选择。
 -- 导出  表 hb.order_item 结构
-CREATE TABLE IF NOT EXISTS `order_item` (
-  `order_item_id` int(11) NOT NULL AUTO_INCREMENT,
-  `amount` float NOT NULL DEFAULT 0,
-  `symbol` varchar(20) NOT NULL DEFAULT '0',
-  `order_type` varchar(20) NOT NULL DEFAULT '0',
-  `status` int(11) NOT NULL DEFAULT 0,
-  `buy_price` double NOT NULL DEFAULT 0,
-  `sell_price` double NOT NULL DEFAULT 0,
-  `buy_time` datetime NOT NULL,
-  `t` float NOT NULL DEFAULT 0,
-  `order_id` bigint(20) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`order_item_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+CREATE TABLE `order_item` (
+	`order_item_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`amount` FLOAT NOT NULL DEFAULT '0',
+	`symbol` VARCHAR(20) NOT NULL DEFAULT '0',
+	`order_type` VARCHAR(20) NOT NULL DEFAULT '0',
+	`status` INT(11) NOT NULL DEFAULT '0',
+	`buy_price` DECIMAL(16,8) NOT NULL DEFAULT '0',
+	`sell_price` DECIMAL(16,8) NOT NULL DEFAULT '0',
+	`buy_time` DATETIME NOT NULL,
+	`t` FLOAT NOT NULL DEFAULT '0',
+	`order_id` BIGINT(20) NOT NULL DEFAULT '0',
+	PRIMARY KEY (`order_item_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=5
+;
+
 
 -- 数据导出被取消选择。
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
