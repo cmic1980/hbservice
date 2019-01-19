@@ -20,6 +20,7 @@ public class HuobiServiceImpl implements HuobiService {
     @Autowired
     private ApiService apiService;
     private Integer accountId;
+    private List<Symbol> symbolList;
 
     public Integer getAccountId() {
         if (this.accountId == null) {
@@ -49,6 +50,10 @@ public class HuobiServiceImpl implements HuobiService {
     public long createBuyOrder(Order order) {
         var client = this.apiService.getApiClient();
 
+        if (this.symbolList == null) {
+            this.symbolList = client.getSymbols();
+        }
+
         // create order:
         CreateOrderRequest request = new CreateOrderRequest();
         request.accountId = String.valueOf(this.getAccountId());
@@ -56,12 +61,16 @@ public class HuobiServiceImpl implements HuobiService {
 
         BigDecimal price = order.getBuyPrice();
         request.price = price.toString();
-        // 0.00001874 小数点都8位，包括小数点和0一共10位
-        if (request.price.length() > 10) {
-            request.price = request.price.substring(0, 10);
-        }
-
         request.symbol = order.getSymbol();
+
+        // 根据币种别名获取币种，确定币种价格精度
+        var currency = this.getCurrency(request.symbol);
+        int scale = Integer.valueOf(currency.pricePrecision);
+
+        // 0.00001874 小数点都8位，包括小数点和0一共10位
+        if (request.price.length() > scale + 2) {
+            request.price = request.price.substring(0, scale + 2);
+        }
         request.type = CreateOrderRequest.OrderType.BUY_LIMIT;
         request.source = "api";
 
@@ -83,9 +92,15 @@ public class HuobiServiceImpl implements HuobiService {
 
         BigDecimal price = order.getSellPrice();
         request.price = price.toString();
+
+
+        // 根据币种别名获取币种，确定币种价格精度
+        var currency = this.getCurrency(request.symbol);
+        int scale = Integer.valueOf(currency.pricePrecision);
+
         // 0.00001874 小数点都8位，包括小数点和0一共10位
-        if (request.price.length() > 10) {
-            request.price = request.price.substring(0, 10);
+        if (request.price.length() > scale + 2) {
+            request.price = request.price.substring(0, scale + 2);
         }
 
         request.symbol = order.getSymbol();
@@ -126,7 +141,18 @@ public class HuobiServiceImpl implements HuobiService {
         req.endDate = "2019-01-19";
         IntrustDetailResponse response = client.intrustOrdersDetail(req);
 
-        List<IntrustDetail> huobiOrderList = (List<IntrustDetail>)response.getData();
+        List<IntrustDetail> huobiOrderList = (List<IntrustDetail>) response.getData();
         return huobiOrderList;
+    }
+
+    private Symbol getCurrency(String symbol) {
+        var client = this.apiService.getApiClient();
+
+        if (this.symbolList == null) {
+            this.symbolList = client.getSymbols();
+        }
+
+        Symbol currency = this.symbolList.stream().filter(s -> s.symbol.equals(symbol)).findAny().get();
+        return currency;
     }
 }
