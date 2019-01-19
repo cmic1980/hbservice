@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.*;
 
-@Component
+// @Component
 public class HuobiScheduledService {
     @Autowired
     private OrderService orderService;

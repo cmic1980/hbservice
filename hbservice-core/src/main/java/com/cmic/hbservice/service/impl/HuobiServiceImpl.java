@@ -4,8 +4,8 @@ import com.cmic.hbservice.domain.Order;
 import com.cmic.hbservice.domain.OrderStatus;
 import com.cmic.hbservice.service.ApiService;
 import com.cmic.hbservice.service.HuobiService;
-import com.cmic.hbservice.service.OrderService;
 import com.huobi.request.CreateOrderRequest;
+import com.huobi.request.IntrustOrdersDetailRequest;
 import com.huobi.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,7 @@ public class HuobiServiceImpl implements HuobiService {
         var klineList = (ArrayList<Kline>) response.data;
         var kline = klineList.get(0);
 
-        BigDecimal buyPrice = new BigDecimal( kline.getOpen());
+        BigDecimal buyPrice = new BigDecimal(kline.getOpen());
         return buyPrice;
     }
 
@@ -54,10 +54,11 @@ public class HuobiServiceImpl implements HuobiService {
         request.accountId = String.valueOf(this.getAccountId());
         request.amount = order.getAmount().toString();
 
-        BigDecimal price =order.getBuyPrice();
+        BigDecimal price = order.getBuyPrice();
         request.price = price.toString();
-        if (request.price.length() > 8) {
-            request.price = request.price.substring(0, 8);
+        // 0.00001874 小数点都8位，包括小数点和0一共10位
+        if (request.price.length() > 10) {
+            request.price = request.price.substring(0, 10);
         }
 
         request.symbol = order.getSymbol();
@@ -82,8 +83,9 @@ public class HuobiServiceImpl implements HuobiService {
 
         BigDecimal price = order.getSellPrice();
         request.price = price.toString();
-        if (request.price.length() > 8) {
-            request.price = request.price.substring(0, 8);
+        // 0.00001874 小数点都8位，包括小数点和0一共10位
+        if (request.price.length() > 10) {
+            request.price = request.price.substring(0, 10);
         }
 
         request.symbol = order.getSymbol();
@@ -108,8 +110,23 @@ public class HuobiServiceImpl implements HuobiService {
         var client = this.apiService.getApiClient();
         var response = client.balance(this.getAccountId().toString());
         var balance = (Balance) response.getData();
-
         var itemList = (List<HashMap>) balance.getList();
         return itemList;
+    }
+
+    @Override
+    public List<IntrustDetail> getOrderList(String symbol) {
+        var client = this.apiService.getApiClient();
+
+        IntrustOrdersDetailRequest req = new IntrustOrdersDetailRequest();
+        req.symbol = symbol;
+        req.types = IntrustOrdersDetailRequest.OrderType.BUY_LIMIT;
+        req.states = IntrustOrdersDetailRequest.OrderStates.FILLED;
+        req.startDate = "2019-01-18";
+        req.endDate = "2019-01-19";
+        IntrustDetailResponse response = client.intrustOrdersDetail(req);
+
+        List<IntrustDetail> huobiOrderList = (List<IntrustDetail>)response.getData();
+        return huobiOrderList;
     }
 }
