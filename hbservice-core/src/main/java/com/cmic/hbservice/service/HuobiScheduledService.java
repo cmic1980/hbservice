@@ -67,7 +67,7 @@ public class HuobiScheduledService {
                     order.setAmount(new BigDecimal(count));
 
                     var ethCount = order.getAmount().multiply(order.getSellPrice()) ;
-                    if (ethCount.doubleValue() > 0.0001) {
+                    if (ethCount.compareTo(new BigDecimal("0.001"))>0) {
                         this.huobiService.createSellOrder(order);
                     }
                 }

@@ -95,7 +95,7 @@ public class HuobiServiceImpl implements HuobiService {
 
 
         // 根据币种别名获取币种，确定币种价格精度
-        var currency = this.getCurrency(request.symbol);
+        var currency = this.getCurrency(order.getSymbol());
         int scale = Integer.valueOf(currency.pricePrecision);
 
         // 0.00001874 小数点都8位，包括小数点和0一共10位
