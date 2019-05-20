@@ -88,7 +88,13 @@ public class HuobiServiceImpl implements HuobiService {
         // create order:
         CreateOrderRequest request = new CreateOrderRequest();
         request.accountId = String.valueOf(this.getAccountId());
-        request.amount = order.getAmount().toString();
+        Double amount = Math.floor(order.getAmount().doubleValue());
+
+        if (amount < 0.05) {
+            return -1;
+        }
+
+        request.amount = amount.toString();
 
         BigDecimal price = order.getSellPrice();
         request.price = price.toString();

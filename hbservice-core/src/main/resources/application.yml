@@ -9,7 +9,7 @@ mybatis:
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:13306/hb?serverTimezone=UTC
+    url: jdbc:mysql://120.78.66.24:3306/hb?serverTimezone=UTC
     username: root
     password: password
 
@@ -20,3 +20,8 @@ huobi:
     url: https://api.huobi.br.com
   key:
     path: c:/src/keys/hb.json
+
+logging:
+  file: hb.log
+  level:
+    root: info

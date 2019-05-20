@@ -34,9 +34,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getPendingList() {
-        if (this.orderList == null) {
-            orderList = this.orderMapper.selectListByStatus(OrderStatus.Pending);
-        }
+        orderList = this.orderMapper.selectListByStatus(OrderStatus.Pending);
         return orderList;
     }
 
@@ -49,15 +47,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void updateOrder(Order order) {
         this.orderMapper.update(order);
-
         this.clearOrderListCache();
     }
 
     @Override
     public List<Order> getBuyingList() {
-        if (this.buyingList == null) {
-            buyingList = this.orderMapper.selectListByStatus(OrderStatus.Buy);
-        }
+        buyingList = this.orderMapper.selectListByStatus(OrderStatus.Buy);
         return buyingList;
     }
 

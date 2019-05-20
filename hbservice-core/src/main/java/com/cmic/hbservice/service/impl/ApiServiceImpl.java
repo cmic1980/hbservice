@@ -1,9 +1,11 @@
 package com.cmic.hbservice.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cmic.hbservice.mapper.ConfigMapper;
 import com.cmic.hbservice.service.ApiService;
 import com.huobi.api.ApiClient;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,24 +19,21 @@ public class ApiServiceImpl implements ApiService {
     @Value("${huobi.key.path}")
     private String accessKeyPath;
 
+    @Autowired
+    private ConfigMapper configMapper;
+
     private ApiClient client;
 
     private String accessKeyId;
     private String accessKeySecret;
+
     @Override
     public ApiClient getApiClient() {
 
-        if(StringUtils.isEmpty(this.accessKeyId) || StringUtils.isEmpty(this.accessKeySecret)){
-            try {
-                FileInputStream inputStream = new FileInputStream(this.accessKeyPath);
-                Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
-                String json = scanner.next();
-                JSONObject jsonObject = (JSONObject) JSONObject.parse(json);
-                this.accessKeyId = jsonObject.getString("ACCESS_KEY");
-                this.accessKeySecret = jsonObject.getString("SECRET_KEY");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+        if (StringUtils.isEmpty(this.accessKeyId) || StringUtils.isEmpty(this.accessKeySecret)) {
+            var config = this.configMapper.selectConfig();
+            this.accessKeyId = config.getAccessKey();
+            this.accessKeySecret = config.getSecretKey();
         }
 
         this.client = new ApiClient(this.accessKeyId, this.accessKeySecret);
